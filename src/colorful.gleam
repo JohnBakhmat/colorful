@@ -8,10 +8,6 @@ pub fn main() {
   io.println("Hello from colorful!")
 }
 
-pub type ColorfulError {
-  OutOfRangeError
-}
-
 pub fn rgb_to_hex(r: Int, g: Int, b: Int) {
   let validate = fn(x: Int) {
     case x >= 0 && x <= 255 {
