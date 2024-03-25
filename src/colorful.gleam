@@ -8,21 +8,20 @@ pub fn main() {
   io.println("Hello from colorful!")
 }
 
-pub fn rgb_to_hex(r: Int, g: Int, b: Int) {
-  let validate = fn(x: Int) {
-    case x >= 0 && x <= 255 {
-      True -> Ok(x)
-      False -> Error("Input should be in range between 0 and 255")
-    }
+fn rgb_to_hex_validate(x: Int) {
+  case x >= 0 && x <= 255 {
+    True -> Ok(x)
+    False -> Error("Input should be in range between 0 and 255")
   }
+}
 
-  use r <- result.try(validate(r))
-  use g <- result.try(validate(g))
-  use b <- result.try(validate(b))
-
+pub fn rgb_to_hex(r: Int, g: Int, b: Int) -> Result(String, String) {
   [r, g, b]
-  |> list.fold("#", fn(acc, x) {
-    acc <> string.pad_left(int.to_base16(x), 2, "0")
+  |> list.map(rgb_to_hex_validate)
+  |> result.all()
+  |> result.map(fn(arr) {
+    arr
+    |> list.map(fn(x) { string.pad_left(int.to_base16(x), 2, "0") })
+    |> list.fold("#", fn(acc, x) { acc <> x })
   })
-  |> Ok()
 }
